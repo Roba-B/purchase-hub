@@ -1,228 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Request an Item — ShopBridge</title>
+  <title>Request an Item</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    :root {
-      --primary: #1a6d43;
-      --accent: #ffc107;
-      --light: #f9f9f9;
-      --white: #ffffff;
-      --text: #2c3e50;
-      --gray: #e0e0e0;
-      --success: #4CAF50;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background-color: #f3f7f5;
-      color: var(--text);
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    .card {
-      background: var(--white);
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      padding: 28px;
-      width: 100%;
-      max-width: 600px;
-    }
-
-    .card-title {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin-bottom: 24px;
-      color: var(--primary);
-      text-align: center;
-    }
-
-    .note-card {
-      background-color: #fffde7;
-      border-left: 4px solid var(--accent);
-      padding: 16px;
-      border-radius: 8px;
-      margin-bottom: 28px;
-      font-size: 0.95rem;
-    }
-
-    .note-card strong {
-      color: #d39e00;
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .note-card code {
-      background: #f0f0f0;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: monospace;
-      font-weight: bold;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #333;
-    }
-
-    input,
-    textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      font-size: 1rem;
-      transition: border-color 0.2s;
-    }
-
-    input:focus,
-    textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-
-    input[type="file"] {
-      padding: 6px;
-      background: #fafafa;
-    }
-
-    .btn {
-      width: 100%;
-      background: var(--success);
-      color: white;
-      border: none;
-      padding: 14px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn:hover {
-      background: #45a049;
-    }
-
-    #result {
-      margin-top: 24px;
-      padding: 16px;
-      border-radius: 10px;
-      background: #f0fdf4;
-      display: none;
-      text-align: center;
-    }
-
-    #result a {
-      display: inline-block;
-      margin-top: 12px;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    #result a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 600px) {
-      .card {
-        padding: 20px;
-      }
-      .card-title {
-        font-size: 1.4rem;
-      }
-    }
+    body { font-family: Arial; max-width: 600px; margin: 30px auto; padding: 0 20px; }
+    .form-group { margin: 15px 0; }
+    input, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+    .btn { background: #4CAF50; color: white; border: none; padding: 12px 24px; cursor: pointer; }
+    .note { background: #fff8e1; padding: 10px; border-left: 4px solid #ffc107; margin: 20px 0; }
   </style>
 </head>
 <body>
+  <h2>Request an Item</h2>
 
-  <div class="card">
-    <h1 class="card-title">Request an Item</h1>
-
-    <div class="note-card">
-      <strong>Price-check fee: 15 Birr</strong>
-      Send to: <code>0923663565</code> via Telebirr.<br>
-      Upload your payment screenshot below.
-    </div>
-
-    <form id="requestForm">
-      <div class="form-group">
-        <label for="fullName">Full Name</label>
-        <input type="text" id="fullName" required />
-      </div>
-
-      <div class="form-group">
-        <label for="phone">Phone Number</label>
-        <input type="tel" id="phone" required />
-      </div>
-
-      <div class="form-group">
-        <label for="city">City / Subcity</label>
-        <input type="text" id="city" required />
-      </div>
-
-      <div class="form-group">
-        <label for="houseNumber">House Number</label>
-        <input type="text" id="houseNumber" required />
-      </div>
-
-      <div class="form-group">
-        <label for="nearestPostOffice">Nearest Post Office (optional)</label>
-        <input type="text" id="nearestPostOffice" />
-      </div>
-
-      <div class="form-group">
-        <label for="itemLink">Paste Product Link (or upload photo below)</label>
-        <input type="url" id="itemLink" placeholder="https://..." />
-      </div>
-
-      <div class="form-group">
-        <label for="itemPhoto">Upload Item Photo</label>
-        <input type="file" id="itemPhoto" accept="image/*" />
-      </div>
-
-      <div class="form-group">
-        <label for="note">Note (optional)</label>
-        <textarea id="note" rows="2" placeholder="e.g., specific color or size"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="paymentProof">Upload 15 Birr Payment Proof (required)</label>
-        <input type="file" id="paymentProof" accept="image/*" required />
-      </div>
-
-      <button type="submit" class="btn">Send Request</button>
-    </form>
-
-    <div id="result"></div>
+  <div class="note">
+    <strong>Price-check fee: 15 birr</strong><br>
+    Send to: <code>0923663565</code> via Telebirr.<br>
+    Upload payment screenshot below.
   </div>
+
+  <form id="requestForm">
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="fullName" required>
+    </div>
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" id="phone" required>
+    </div>
+    <div class="form-group">
+      <label>City / Subcity</label>
+      <input type="text" id="city" required>
+    </div>
+    <div class="form-group">
+      <label>House Number</label>
+      <input type="text" id="houseNumber" required>
+    </div>
+    <div class="form-group">
+      <label>Nearest Post Office (optional)</label>
+      <input type="text" id="nearestPostOffice">
+    </div>
+    <div class="form-group">
+      <label>Paste Product Link (or upload photo below)</label>
+      <input type="url" id="itemLink">
+    </div>
+    <div class="form-group">
+      <label>Upload Item Photo</label>
+      <input type="file" id="itemPhoto" accept="image/*">
+    </div>
+    <div class="form-group">
+      <label>Note (optional)</label>
+      <textarea id="note" rows="2"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Upload 10 Birr Payment Proof (required)</label>
+      <input type="file" id="paymentProof" accept="image/*" required>
+    </div>
+    <button type="submit" class="btn">Send Request</button>
+  </form>
+
+  <div id="result" style="margin-top:20px; display:none;"></div>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbw1p7dCybg2PVp3XRF1dleQHbAK4oerJau6XPLogxROHa9CZp8LfksRDLNtC8jEOQFd0w/exec";
 
     document.getElementById('requestForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-
+      
       const paymentFile = document.getElementById('paymentProof').files[0];
       const itemPhotoFile = document.getElementById('itemPhoto').files[0];
-
+      
+      // Upload files to a free image host (we'll use imgbb)
       const upload = async (file) => {
         if (!file) return "";
         const formData = new FormData();
@@ -235,52 +84,42 @@
         return json.data?.url || "";
       };
 
-      try {
-        const [paymentURL, itemPhotoURL] = await Promise.all([
-          upload(paymentFile),
-          upload(itemPhotoFile)
-        ]);
+      // Get free imgbb key at: https://imgbb.com/api
+      const [paymentURL, itemPhotoURL] = await Promise.all([
+        upload(paymentFile),
+        upload(itemPhotoFile)
+      ]);
 
-        const data = {
-          fullName: document.getElementById('fullName').value,
-          phone: document.getElementById('phone').value,
-          city: document.getElementById('city').value,
-          houseNumber: document.getElementById('houseNumber').value,
-          nearestPostOffice: document.getElementById('nearestPostOffice').value,
-          itemLink: document.getElementById('itemLink').value,
-          itemPhotoURL: itemPhotoURL,
-          note: document.getElementById('note').value,
-          paymentProofURL: paymentURL
-        };
+      const data = {
+        fullName: document.getElementById('fullName').value,
+        phone: document.getElementById('phone').value,
+        city: document.getElementById('city').value,
+        houseNumber: document.getElementById('houseNumber').value,
+        nearestPostOffice: document.getElementById('nearestPostOffice').value,
+        itemLink: document.getElementById('itemLink').value,
+        itemPhotoURL: itemPhotoURL,
+        note: document.getElementById('note').value,
+        paymentProofURL: paymentURL
+      };
 
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify(data),
-          headers: { 'Content-Type': 'application/json' }
-        });
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
 
-        const result = await res.json();
-        const resultDiv = document.getElementById('result');
-
-        if (result.success) {
-          resultDiv.innerHTML = `
-            <p>✅ Your request is received!<br>
-            <strong>Order ID:</strong> ${result.orderID}<br>
-            We’ll WhatsApp you the final price within 3 hours.</p>
-            <a href="track.html?id=${result.orderID}">Track your order</a>
-          `;
-          resultDiv.style.backgroundColor = '#e8f5e9';
-        } else {
-          resultDiv.innerHTML = `<p>❌ Error. Please try again.</p>`;
-          resultDiv.style.backgroundColor = '#ffebee';
-        }
-        resultDiv.style.display = 'block';
-      } catch (err) {
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = `<p>⚠️ Upload failed. Please check your connection and try again.</p>`;
-        resultDiv.style.display = 'block';
-        resultDiv.style.backgroundColor = '#fff3e0';
+      const resultDiv = document.getElementById('result');
+      if (result.success) {
+        resultDiv.innerHTML = `
+          <p style="color:green;">✅ Your request is received!<br>
+          Your Order ID: <strong>${result.orderID}</strong><br>
+          We’ll WhatsApp you the final price within 3 hours.</p>
+          <p><a href="track.html?id=${result.orderID}">Track your order</a></p>
+        `;
+      } else {
+        resultDiv.innerHTML = `<p style="color:red;">❌ Error. Please try again.</p>`;
       }
+      resultDiv.style.display = 'block';
     });
   </script>
 </body>
