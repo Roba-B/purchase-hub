@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Confirm Final Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+      background: #f9f9f9;
+    }
+    .container {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .form-group {
+      margin: 15px 0;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .btn {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      cursor: pointer;
+      border-radius: 4px;
+      width: 100%;
+      font-size: 16px;
+    }
+    .btn:hover {
+      background: #45a049;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 4px;
+      display: none;
+    }
+    .success { background: #e8f5e9; color: #2e7d32; }
+    .error { background: #ffebee; color: #c62828; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Confirm Your Final Payment</h2>
+    <p>After paying the total amount (via Telebirr, CBE Birr, etc.), upload your payment proof below.</p>
+
+    <form id="confirmForm">
+      <div class="form-group">
+        <label for="orderId">Order ID</label>
+        <input type="text" id="orderId" placeholder="e.g. ZB-20251209-001" required>
+      </div>
+      <div class="form-group">
+        <label for="paymentProof">Upload Payment Screenshot (required)</label>
+        <input type="file" id="paymentProof" accept="image/*" required>
+      </div>
+      <button type="submit" class="btn">Confirm Payment</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    // Replace with your actual Google Apps Script Web App URL
+    const API_URL = "https://script.google.com/macros/s/AKfycbw1p7dCybg2PVp3XRF1dleQHbAK4oerJau6XPLogxROHa9CZp8LfksRDLNtC8jEOQFd0w/exec";
+
+    // Helper: upload image to imgbb
+    async function uploadToImgBB(file) {
+      const formData = new FormData();
+      formData.append("image", file);
+      // Get free key at https://imgbb.com/api
+      const res = await fetch("https://api.imgbb.com/1/upload?key=482b334ae8cc750750103a1e503ec842", {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success) {
+        return data.data.url;
+      } else {
+        throw new Error("Image upload failed");
+      }
+    }
+
+    document.getElementById("confirmForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const orderId = document.getElementById("orderId").value.trim();
+      const file = document.getElementById("paymentProof").files[0];
+
+      if (!orderId || !file) {
+        showResult("Please fill all fields.", false);
+        return;
+      }
+
+      try {
+        // Upload screenshot
+        const imageUrl = await uploadToImgBB(file);
+
+        // Send to Google Apps Script
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderID: orderId,
+            paymentProofURL: imageUrl
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showResult(
+            "✅ Payment confirmed! We’ll begin processing your order shortly. Check status anytime using your Order ID.",
+            true
+          );
+          document.getElementById("confirmForm").reset();
+        } else {
+          showResult("❌ " + (result.error || "Order not found. Check your Order ID."), false);
+        }
+      } catch (err) {
+        console.error(err);
+        showResult("❌ Failed to upload image or confirm payment. Try again.", false);
+      }
+    });
+
+    function showResult(message, isSuccess) {
+      const resultDiv = document.getElementById("result");
+      resultDiv.textContent = message;
+      resultDiv.className = isSuccess ? "success" : "error";
+      resultDiv.style.display = "block";
+    }
+
+    // Auto-fill Order ID from URL if present (e.g., link from WhatsApp)
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderIdFromUrl = urlParams.get("id");
+    if (orderIdFromUrl) {
+      document.getElementById("orderId").value = orderIdFromUrl;
+    }
+  </script>
+</body>
+</html>

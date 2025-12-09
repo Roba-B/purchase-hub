@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Request an Item</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: 30px auto; padding: 0 20px; }
+    .form-group { margin: 15px 0; }
+    input, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+    .btn { background: #4CAF50; color: white; border: none; padding: 12px 24px; cursor: pointer; }
+    .note { background: #fff8e1; padding: 10px; border-left: 4px solid #ffc107; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <h2>Request an Item</h2>
+
+  <div class="note">
+    <strong>Price-check fee: 10 birr</strong><br>
+    Send to: <code>09XXXXXXXX</code> via Telebirr / CBE Birr.<br>
+    Upload payment screenshot below.
+  </div>
+
+  <form id="requestForm">
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="fullName" required>
+    </div>
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" id="phone" required>
+    </div>
+    <div class="form-group">
+      <label>City / Subcity</label>
+      <input type="text" id="city" required>
+    </div>
+    <div class="form-group">
+      <label>House Number</label>
+      <input type="text" id="houseNumber" required>
+    </div>
+    <div class="form-group">
+      <label>Nearest Post Office (optional)</label>
+      <input type="text" id="nearestPostOffice">
+    </div>
+    <div class="form-group">
+      <label>Paste Product Link (or upload photo below)</label>
+      <input type="url" id="itemLink">
+    </div>
+    <div class="form-group">
+      <label>Upload Item Photo</label>
+      <input type="file" id="itemPhoto" accept="image/*">
+    </div>
+    <div class="form-group">
+      <label>Note (optional)</label>
+      <textarea id="note" rows="2"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Upload 10 Birr Payment Proof (required)</label>
+      <input type="file" id="paymentProof" accept="image/*" required>
+    </div>
+    <button type="submit" class="btn">Send Request</button>
+  </form>
+
+  <div id="result" style="margin-top:20px; display:none;"></div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbw1p7dCybg2PVp3XRF1dleQHbAK4oerJau6XPLogxROHa9CZp8LfksRDLNtC8jEOQFd0w/exec";
+
+    document.getElementById('requestForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const paymentFile = document.getElementById('paymentProof').files[0];
+      const itemPhotoFile = document.getElementById('itemPhoto').files[0];
+      
+      // Upload files to a free image host (we'll use imgbb)
+      const upload = async (file) => {
+        if (!file) return "";
+        const formData = new FormData();
+        formData.append("image", file);
+        const res = await fetch("https://api.imgbb.com/1/upload?key=482b334ae8cc750750103a1e503ec842", {
+          method: "POST",
+          body: formData
+        });
+        const json = await res.json();
+        return json.data?.url || "";
+      };
+
+      // Get free imgbb key at: https://imgbb.com/api
+      const [paymentURL, itemPhotoURL] = await Promise.all([
+        upload(paymentFile),
+        upload(itemPhotoFile)
+      ]);
+
+      const data = {
+        fullName: document.getElementById('fullName').value,
+        phone: document.getElementById('phone').value,
+        city: document.getElementById('city').value,
+        houseNumber: document.getElementById('houseNumber').value,
+        nearestPostOffice: document.getElementById('nearestPostOffice').value,
+        itemLink: document.getElementById('itemLink').value,
+        itemPhotoURL: itemPhotoURL,
+        note: document.getElementById('note').value,
+        paymentProofURL: paymentURL
+      };
+
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+
+      const resultDiv = document.getElementById('result');
+      if (result.success) {
+        resultDiv.innerHTML = `
+          <p style="color:green;">✅ Your request is received!<br>
+          Your Order ID: <strong>${result.orderID}</strong><br>
+          We’ll WhatsApp you the final price within 3 hours.</p>
+          <p><a href="track.html?id=${result.orderID}">Track your order</a></p>
+        `;
+      } else {
+        resultDiv.innerHTML = `<p style="color:red;">❌ Error. Please try again.</p>`;
+      }
+      resultDiv.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

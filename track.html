@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Track Order</title>
+  <style>
+    body { font-family: Arial; max-width: 500px; margin: 40px auto; padding: 0 20px; }
+    .status { background: #e8f5e9; padding: 15px; border-radius: 4px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>Track Your Order</h2>
+  <input type="text" id="orderId" placeholder="Enter your Order ID (e.g. ZB-20251209-001)" style="width:100%; padding:8px;">
+  <button onclick="track()" style="margin-top:10px; padding:8px 16px;">Check Status</button>
+  <div id="status"></div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbw1p7dCybg2PVp3XRF1dleQHbAK4oerJau6XPLogxROHa9CZp8LfksRDLNtC8jEOQFd0w/exec";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const idFromURL = urlParams.get('id');
+    if (idFromURL) {
+      document.getElementById('orderId').value = idFromURL;
+      track();
+    }
+
+    async function track() {
+      const id = document.getElementById('orderId').value;
+      if (!id) return;
+      
+      const res = await fetch(API_URL + "?id=" + encodeURIComponent(id));
+      const data = await res.json();
+      
+      const statusDiv = document.getElementById('status');
+      if (data.success) {
+        statusDiv.innerHTML = `<div class="status"><strong>Status:</strong> ${data.status}</div>`;
+      } else {
+        statusDiv.innerHTML = `<p style="color:red;">Order not found.</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
