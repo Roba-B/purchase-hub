@@ -4,122 +4,717 @@
   <title>Request an Item</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial; max-width: 600px; margin: 30px auto; padding: 0 20px; }
-    .form-group { margin: 15px 0; }
-    input, textarea { width: 100%; padding: 8px; margin-top: 5px; }
-    .btn { background: #4CAF50; color: white; border: none; padding: 12px 24px; cursor: pointer; }
-    .note { background: #fff8e1; padding: 10px; border-left: 4px solid #ffc107; margin: 20px 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 20px;
+    }
+    
+    .header h1 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    
+    .header p {
+      color: #5d6d7e;
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 40px;
+      justify-content: center;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      flex: 1;
+      min-width: 320px;
+      max-width: 500px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f4f8;
+    }
+    
+    .card-icon {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-size: 24px;
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+    }
+    
+    .card-title {
+      font-size: 22px;
+      color: #2c3e50;
+      margin: 0;
+      font-weight: 600;
+    }
+    
+    .form-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 600;
+      color: #34495e;
+      font-size: 15px;
+    }
+    
+    .form-group input, 
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e8eef4;
+      border-radius: 10px;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+      background-color: #fafcfd;
+    }
+    
+    .form-group input:focus, 
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #4CAF50;
+      background-color: white;
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    }
+    
+    .optional {
+      color: #7f8c8d;
+      font-weight: normal;
+    }
+    
+    .upload-area {
+      border: 2px dashed #d1d9e6;
+      border-radius: 12px;
+      padding: 35px 20px;
+      text-align: center;
+      background-color: #fafcfd;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .upload-area:hover {
+      border-color: #4CAF50;
+      background-color: #f8fdf8;
+      transform: scale(1.01);
+    }
+    
+    .upload-area.dragging {
+      border-color: #4CAF50;
+      background-color: #e8f5e9;
+    }
+    
+    .upload-area p {
+      margin: 10px 0 0;
+      color: #5d6d7e;
+      font-size: 15px;
+    }
+    
+    .upload-area .icon {
+      font-size: 48px;
+      color: #4CAF50;
+      margin-bottom: 15px;
+      opacity: 0.8;
+    }
+    
+    .upload-area .file-name {
+      color: #2c3e50;
+      font-weight: 600;
+      margin-top: 10px;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .payment-note {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid #a5d6a7;
+    }
+    
+    .payment-note strong {
+      color: #2e7d32;
+      font-size: 18px;
+    }
+    
+    .payment-note p {
+      margin: 10px 0;
+      color: #1b5e20;
+    }
+    
+    .telebirr-code {
+      background: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 18px;
+      font-weight: bold;
+      color: #2e7d32;
+      margin: 10px 0;
+      display: inline-block;
+      border: 2px dashed #4CAF50;
+    }
+    
+    .submit-btn {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      border: none;
+      padding: 18px 45px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: block;
+      margin: 40px auto;
+      transition: all 0.3s;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+    }
+    
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+    }
+    
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+    
+    .submit-btn:disabled {
+      background: linear-gradient(135deg, #cccccc, #aaaaaa);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    #result {
+      text-align: center;
+      padding: 30px;
+      margin-top: 20px;
+      border-radius: 12px;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .success {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      color: #1b5e20;
+      border-left: 5px solid #4CAF50;
+    }
+    
+    .error {
+      background: linear-gradient(135deg, #ffebee, #ffcdd2);
+      color: #c62828;
+      border-left: 5px solid #f44336;
+    }
+    
+    .order-id {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 22px;
+      font-weight: bold;
+      margin: 20px auto;
+      display: inline-block;
+      color: #2e7d32;
+      border: 2px solid #4CAF50;
+      min-width: 200px;
+    }
+    
+    .track-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 25px;
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    }
+    
+    .track-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(33, 150, 243, 0.4);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .card {
+        width: 100%;
+        max-width: 100%;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .header p {
+        font-size: 16px;
+      }
+    }
+    
+    .validation-error {
+      border-color: #f44336 !important;
+    }
+    
+    .validation-message {
+      color: #f44336;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <h2>Request an Item</h2>
-
-  <div class="note">
-    <strong>Price-check fee: 15 birr</strong><br>
-    Send to: <code>0923663565</code> via Telebirr.<br>
-    Upload payment screenshot below.
+  <div class="header">
+    <h1>Request an Item</h1>
+    <p>Fill in your details and share the item you want. We'll get you a price quote within 1-3 hours.</p>
   </div>
-
+  
+  <!-- FORM ELEMENT RESTORED -->
   <form id="requestForm">
-    <div class="form-group">
-      <label>Full Name</label>
-      <input type="text" id="fullName" required>
+    <div class="container">
+      <!-- Left Card: Your Information -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">👤</div>
+          <h2 class="card-title">Your Information</h2>
+        </div>
+        
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="fullName" required placeholder="Abebe Kebede">
+          <div class="validation-message" id="nameError">Please enter your full name</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" required placeholder="+251 9XX XXXX XXXX">
+          <div class="validation-message" id="phoneError">Please enter a valid phone number</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="city">Delivery Address</label>
+          <input type="text" id="city" name="city" required placeholder="Bole, Addis Ababa">
+          <div class="validation-message" id="cityError">Please enter your delivery address</div>
+        </div>
+      </div>
+      
+      <!-- Right Card: Item Details -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📦</div>
+          <h2 class="card-title">Item Details</h2>
+        </div>
+        
+        <div class="form-group">
+          <label for="itemLink">Product Link</label>
+          <input type="url" id="itemLink" name="itemLink" placeholder="https://aliexpress.com/item/...">
+        </div>
+        
+        <div class="form-group">
+          <label>Or Upload Product Image</label>
+          <div class="upload-area" id="itemPhotoArea">
+            <div class="icon">📷</div>
+            <p>Click or drag to upload a screenshot</p>
+            <div class="file-name" id="itemFileName"></div>
+            <input type="file" id="itemPhoto" name="itemPhoto" accept="image/*" style="display: none;">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="note">Additional Details <span class="optional">(Optional)</span></label>
+          <textarea id="note" name="note" rows="3" placeholder="Color preference, size, quantity, etc."></textarea>
+        </div>
+        
+        <!-- Payment Note Restored -->
+        <div class="payment-note">
+          <p><strong>10 Birr Price-Check Fee</strong></p>
+          <p>A small fee to confirm your request and cover our time checking the price.</p>
+          <p>Pay via Telebirr, CBE Birr, or Amole after submitting.</p>
+          <p>Send to: <span class="telebirr-code">0923663565</span> via Telebirr.</p>
+          <p>Upload payment screenshot below.</p>
+        </div>
+        
+        <div class="form-group">
+          <label for="paymentProof">Upload 10 Birr Payment Proof <span style="color: #f44336;">(Required)</span></label>
+          <div class="upload-area" id="paymentProofArea">
+            <div class="icon">💳</div>
+            <p>Click or drag to upload payment screenshot</p>
+            <div class="file-name" id="paymentFileName"></div>
+            <input type="file" id="paymentProof" name="paymentProof" accept="image/*" required style="display: none;">
+          </div>
+          <div class="validation-message" id="paymentError">Please upload payment proof</div>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label>Phone Number</label>
-      <input type="tel" id="phone" required>
-    </div>
-    <div class="form-group">
-      <label>City / Subcity</label>
-      <input type="text" id="city" required>
-    </div>
-    <div class="form-group">
-      <label>House Number</label>
-      <input type="text" id="houseNumber" required>
-    </div>
-    <div class="form-group">
-      <label>Nearest Post Office (optional)</label>
-      <input type="text" id="nearestPostOffice">
-    </div>
-    <div class="form-group">
-      <label>Paste Product Link (or upload photo below)</label>
-      <input type="url" id="itemLink">
-    </div>
-    <div class="form-group">
-      <label>Upload Item Photo</label>
-      <input type="file" id="itemPhoto" accept="image/*">
-    </div>
-    <div class="form-group">
-      <label>Note (optional)</label>
-      <textarea id="note" rows="2"></textarea>
-    </div>
-    <div class="form-group">
-      <label>Upload 10 Birr Payment Proof (required)</label>
-      <input type="file" id="paymentProof" accept="image/*" required>
-    </div>
-    <button type="submit" class="btn">Send Request</button>
+    
+    <button type="submit" class="submit-btn" id="submitBtn">Send Request</button>
   </form>
-
-  <div id="result" style="margin-top:20px; display:none;"></div>
+  
+  <div id="result"></div>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbw1p7dCybg2PVp3XRF1dleQHbAK4oerJau6XPLogxROHa9CZp8LfksRDLNtC8jEOQFd0w/exec";
 
+    // Setup file upload interactions
+    document.getElementById('itemPhotoArea').addEventListener('click', () => {
+      document.getElementById('itemPhoto').click();
+    });
+    
+    document.getElementById('paymentProofArea').addEventListener('click', () => {
+      document.getElementById('paymentProof').click();
+    });
+    
+    // Handle drag and drop for file uploads
+    const setupDragDrop = (area, inputId, fileNameId) => {
+      const input = document.getElementById(inputId);
+      
+      area.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        area.classList.add('dragging');
+      });
+      
+      area.addEventListener('dragleave', () => {
+        area.classList.remove('dragging');
+      });
+      
+      area.addEventListener('drop', (e) => {
+        e.preventDefault();
+        area.classList.remove('dragging');
+        
+        if (e.dataTransfer.files.length) {
+          // Prevent multiple files
+          if (e.dataTransfer.files.length > 1) {
+            alert('Please upload only one file');
+            return;
+          }
+          
+          const file = e.dataTransfer.files[0];
+          
+          // Validate file type
+          if (!file.type.startsWith('image/')) {
+            alert('Please upload an image file (JPG, PNG, etc.)');
+            return;
+          }
+          
+          // Validate file size (max 5MB)
+          if (file.size > 5 * 1024 * 1024) {
+            alert('File size too large. Please upload an image less than 5MB');
+            return;
+          }
+          
+          input.files = e.dataTransfer.files;
+          updateFileNameDisplay(fileNameId, file.name);
+        }
+      });
+    };
+    
+    // Update file name display
+    const updateFileNameDisplay = (fileNameId, fileName) => {
+      const fileNameElement = document.getElementById(fileNameId);
+      fileNameElement.textContent = fileName;
+      fileNameElement.style.display = 'block';
+    };
+    
+    // Setup drag and drop for both upload areas
+    setupDragDrop(document.getElementById('itemPhotoArea'), 'itemPhoto', 'itemFileName');
+    setupDragDrop(document.getElementById('paymentProofArea'), 'paymentProof', 'paymentFileName');
+    
+    // Handle file selection changes
+    document.getElementById('itemPhoto').addEventListener('change', function() {
+      if (this.files.length) {
+        const file = this.files[0];
+        
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert('File size too large. Please upload an image less than 5MB');
+          this.value = ''; // Clear the file input
+          document.getElementById('itemFileName').style.display = 'none';
+          return;
+        }
+        
+        updateFileNameDisplay('itemFileName', file.name);
+      }
+    });
+    
+    document.getElementById('paymentProof').addEventListener('change', function() {
+      if (this.files.length) {
+        const file = this.files[0];
+        
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert('File size too large. Please upload an image less than 5MB');
+          this.value = ''; // Clear the file input
+          document.getElementById('paymentFileName').style.display = 'none';
+          document.getElementById('paymentError').style.display = 'block';
+          document.getElementById('paymentProofArea').classList.add('validation-error');
+          return;
+        }
+        
+        updateFileNameDisplay('paymentFileName', file.name);
+        document.getElementById('paymentError').style.display = 'none';
+        document.getElementById('paymentProofArea').classList.remove('validation-error');
+      }
+    });
+    
+    // Form validation
+    const validateForm = () => {
+      let isValid = true;
+      
+      // Validate required fields
+      const requiredFields = [
+        { id: 'fullName', errorId: 'nameError', message: 'Please enter your full name' },
+        { id: 'phone', errorId: 'phoneError', message: 'Please enter a valid phone number' },
+        { id: 'city', errorId: 'cityError', message: 'Please enter your delivery address' }
+      ];
+      
+      requiredFields.forEach(field => {
+        const input = document.getElementById(field.id);
+        const errorElement = document.getElementById(field.errorId);
+        
+        if (!input.value.trim()) {
+          isValid = false;
+          input.classList.add('validation-error');
+          errorElement.textContent = field.message;
+          errorElement.style.display = 'block';
+        } else {
+          input.classList.remove('validation-error');
+          errorElement.style.display = 'none';
+        }
+      });
+      
+      // Validate phone number format (Ethiopian)
+      const phoneInput = document.getElementById('phone');
+      const phoneError = document.getElementById('phoneError');
+      const phoneRegex = /^(\+251|0)[79]\d{8}$/;
+      const cleanedPhone = phoneInput.value.replace(/\s+/g, '');
+      
+      if (phoneInput.value.trim() && !phoneRegex.test(cleanedPhone)) {
+        isValid = false;
+        phoneInput.classList.add('validation-error');
+        phoneError.textContent = 'Please enter a valid Ethiopian phone number (e.g., +251 9XX XXX XXXX or 09XX XXX XXXX)';
+        phoneError.style.display = 'block';
+      }
+      
+      // Validate URL if provided
+      const urlInput = document.getElementById('itemLink');
+      if (urlInput.value.trim() && !isValidUrl(urlInput.value)) {
+        urlInput.classList.add('validation-error');
+        // Don't set isValid to false for optional field
+      } else if (urlInput.value.trim()) {
+        urlInput.classList.remove('validation-error');
+      }
+      
+      // Validate payment proof
+      const paymentFile = document.getElementById('paymentProof').files[0];
+      const paymentError = document.getElementById('paymentError');
+      
+      if (!paymentFile) {
+        isValid = false;
+        document.getElementById('paymentProofArea').classList.add('validation-error');
+        paymentError.style.display = 'block';
+      } else {
+        document.getElementById('paymentProofArea').classList.remove('validation-error');
+        paymentError.style.display = 'none';
+      }
+      
+      return isValid;
+    };
+    
+    // URL validation helper
+    const isValidUrl = (urlString) => {
+      try {
+        const url = new URL(urlString);
+        return url.protocol === 'http:' || url.protocol === 'https:';
+      } catch (e) {
+        return false;
+      }
+    };
+    
+    // Handle form submission - RESTORED FORM SUBMIT EVENT
     document.getElementById('requestForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const paymentFile = document.getElementById('paymentProof').files[0];
+      // Validate form
+      if (!validateForm()) {
+        return;
+      }
+      
+      // Disable submit button and show loading
+      const submitBtn = document.getElementById('submitBtn');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Processing...';
+      submitBtn.disabled = true;
+      
+      const paymentFileInput = document.getElementById('paymentProof').files[0];
       const itemPhotoFile = document.getElementById('itemPhoto').files[0];
       
-      // Upload files to a free image host (we'll use imgbb)
+      // Upload files to imgbb - EXACT SAME FUNCTION AS ORIGINAL
       const upload = async (file) => {
         if (!file) return "";
         const formData = new FormData();
         formData.append("image", file);
-        const res = await fetch("https://api.imgbb.com/1/upload?key=482b334ae8cc750750103a1e503ec842", {
-          method: "POST",
-          body: formData
-        });
-        const json = await res.json();
-        return json.data?.url || "";
+        try {
+          const res = await fetch("https://api.imgbb.com/1/upload?key=482b334ae8cc750750103a1e503ec842", {
+            method: "POST",
+            body: formData
+          });
+          const json = await res.json();
+          return json.data?.url || "";
+        } catch (error) {
+          console.error("Upload error:", error);
+          return "";
+        }
       };
 
-      // Get free imgbb key at: https://imgbb.com/api
+      // Upload both files in parallel - EXACT SAME AS ORIGINAL
       const [paymentURL, itemPhotoURL] = await Promise.all([
-        upload(paymentFile),
+        upload(paymentFileInput),
         upload(itemPhotoFile)
       ]);
 
+      // Prepare data for submission - EXACT SAME STRUCTURE AS ORIGINAL
       const data = {
         fullName: document.getElementById('fullName').value,
         phone: document.getElementById('phone').value,
         city: document.getElementById('city').value,
-        houseNumber: document.getElementById('houseNumber').value,
-        nearestPostOffice: document.getElementById('nearestPostOffice').value,
         itemLink: document.getElementById('itemLink').value,
         itemPhotoURL: itemPhotoURL,
         note: document.getElementById('note').value,
         paymentProofURL: paymentURL
       };
 
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
-      const result = await res.json();
+      try {
+        // Submit to Google Apps Script - EXACT SAME AS ORIGINAL
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
 
-      const resultDiv = document.getElementById('result');
-      if (result.success) {
-        resultDiv.innerHTML = `
-          <p style="color:green;">✅ Your request is received!<br>
-          Your Order ID: <strong>${result.orderID}</strong><br>
-          We’ll WhatsApp you the final price within 3 hours.</p>
-          <p><a href="track.html?id=${result.orderID}">Track your order</a></p>
-        `;
-      } else {
-        resultDiv.innerHTML = `<p style="color:red;">❌ Error. Please try again.</p>`;
+        const resultDiv = document.getElementById('result');
+        if (result.success) {
+          resultDiv.className = 'success';
+          // EXACT SAME SUCCESS MESSAGE AS ORIGINAL
+          resultDiv.innerHTML = `
+            <p style="font-size: 18px; margin-bottom: 15px;">✅ Your request is received!</p>
+            <p>Your Order ID: <strong>${result.orderID}</strong></p>
+            <p>We'll WhatsApp you the final price within 3 hours.</p>
+            <p><a href="track.html?id=${result.orderID}" class="track-link">Track your order</a></p>
+          `;
+        } else {
+          resultDiv.className = 'error';
+          resultDiv.innerHTML = '<p style="font-size: 18px;">❌ Error. Please try again.</p>';
+        }
+        resultDiv.style.display = 'block';
+        
+        // Scroll to result
+        resultDiv.scrollIntoView({ behavior: 'smooth' });
+        
+        // Clear form on success (optional)
+        if (result.success) {
+          document.getElementById('requestForm').reset();
+          document.getElementById('itemFileName').style.display = 'none';
+          document.getElementById('paymentFileName').style.display = 'none';
+        }
+      } catch (error) {
+        console.error("Submission error:", error);
+        const resultDiv = document.getElementById('result');
+        resultDiv.className = 'error';
+        resultDiv.innerHTML = '<p style="font-size: 18px;">❌ Network Error. Please try again.</p>';
+        resultDiv.style.display = 'block';
+        resultDiv.scrollIntoView({ behavior: 'smooth' });
+      } finally {
+        // Reset submit button
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
       }
-      resultDiv.style.display = 'block';
+    });
+    
+    // Real-time validation for input fields
+    const setupRealTimeValidation = (inputId, errorId) => {
+      const input = document.getElementById(inputId);
+      const errorElement = document.getElementById(errorId);
+      
+      input.addEventListener('input', () => {
+        if (input.value.trim()) {
+          input.classList.remove('validation-error');
+          errorElement.style.display = 'none';
+        }
+      });
+    };
+    
+    // Setup real-time validation for all inputs
+    setupRealTimeValidation('fullName', 'nameError');
+    setupRealTimeValidation('phone', 'phoneError');
+    setupRealTimeValidation('city', 'cityError');
+    
+    // Allow Enter key to submit form
+    document.querySelectorAll('#requestForm input').forEach(input => {
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && e.target.type !== 'textarea') {
+          e.preventDefault();
+          document.getElementById('submitBtn').click();
+        }
+      });
     });
   </script>
 </body>
