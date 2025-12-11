@@ -5,76 +5,341 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       max-width: 600px;
-      margin: 40px auto;
-      padding: 0 20px;
-      background: #f9f9f9;
+      margin: 0 auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+    
     .container {
       background: white;
-      padding: 25px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 40px 35px;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease;
     }
-    h2 {
+    
+    .container:hover {
+      transform: translateY(-5px);
+    }
+    
+    .header {
       text-align: center;
-      margin-bottom: 20px;
-      color: #333;
+      margin-bottom: 30px;
     }
+    
+    .header h2 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    
+    .header p {
+      color: #5d6d7e;
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
     .form-group {
-      margin: 15px 0;
+      margin: 25px 0;
     }
+    
     label {
       display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
+      margin-bottom: 10px;
+      font-weight: 600;
+      color: #34495e;
+      font-size: 15px;
     }
-    input[type="text"], input[type="file"] {
+    
+    input[type="text"] {
       width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    .btn {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      cursor: pointer;
-      border-radius: 4px;
-      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid #e8eef4;
+      border-radius: 12px;
       font-size: 16px;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+      background-color: #fafcfd;
     }
-    .btn:hover {
-      background: #45a049;
+    
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #4CAF50;
+      background-color: white;
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
     }
-    #result {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 4px;
+    
+    .upload-area {
+      border: 2px dashed #d1d9e6;
+      border-radius: 12px;
+      padding: 30px 20px;
+      text-align: center;
+      background-color: #fafcfd;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .upload-area:hover {
+      border-color: #4CAF50;
+      background-color: #f8fdf8;
+    }
+    
+    .upload-area.dragging {
+      border-color: #4CAF50;
+      background-color: #e8f5e9;
+    }
+    
+    .upload-icon {
+      font-size: 48px;
+      color: #4CAF50;
+      margin-bottom: 15px;
+      opacity: 0.8;
+    }
+    
+    .upload-text {
+      color: #5d6d7e;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    
+    .file-name {
+      color: #2c3e50;
+      font-weight: 600;
+      margin-top: 15px;
+      font-size: 14px;
       display: none;
     }
-    .success { background: #e8f5e9; color: #2e7d32; }
-    .error { background: #ffebee; color: #c62828; }
+    
+    .file-input {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      border: none;
+      padding: 18px 30px;
+      cursor: pointer;
+      border-radius: 12px;
+      width: 100%;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+    }
+    
+    .btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    
+    .btn:disabled {
+      background: linear-gradient(135deg, #cccccc, #aaaaaa);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .btn.loading {
+      color: transparent;
+    }
+    
+    .btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      top: 50%;
+      left: 50%;
+      margin: -12px 0 0 -12px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .processing-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+    
+    .processing-content {
+      text-align: center;
+      max-width: 400px;
+      padding: 40px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+    
+    .processing-spinner {
+      width: 80px;
+      height: 80px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #4CAF50;
+      border-radius: 50%;
+      animation: spin 1.5s linear infinite;
+      margin: 0 auto 30px;
+    }
+    
+    .processing-text {
+      font-size: 24px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+    
+    .processing-subtext {
+      color: #5d6d7e;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    
+    #result {
+      margin-top: 30px;
+      padding: 25px;
+      border-radius: 12px;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .success { 
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      color: #1b5e20;
+      border-left: 5px solid #4CAF50;
+    }
+    
+    .error { 
+      background: linear-gradient(135deg, #ffebee, #ffcdd2);
+      color: #c62828;
+      border-left: 5px solid #f44336;
+    }
+    
+    .result-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .result-message {
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+    
+    .order-id-highlight {
+      background: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 18px;
+      font-weight: bold;
+      color: #2e7d32;
+      margin: 15px 0;
+      display: inline-block;
+      border: 2px dashed #4CAF50;
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 25px 20px;
+      }
+      
+      .header h2 {
+        font-size: 24px;
+      }
+      
+      .btn {
+        padding: 16px 20px;
+        font-size: 16px;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Processing Overlay -->
+  <div class="processing-overlay" id="processingOverlay">
+    <div class="processing-content">
+      <div class="processing-spinner"></div>
+      <div class="processing-text">Processing Payment</div>
+      <div class="processing-subtext">
+        Please wait while we confirm your payment and update your order status. 
+        This may take a few moments.
+      </div>
+    </div>
+  </div>
+
   <div class="container">
-    <h2>Confirm Your Final Payment</h2>
-    <p>After paying the total amount via Telebirr upload your payment proof below.</p>
+    <div class="header">
+      <h2>Confirm Your Final Payment</h2>
+      <p>After paying the total amount via Telebirr, upload your payment proof below to complete your order.</p>
+    </div>
 
     <form id="confirmForm">
       <div class="form-group">
         <label for="orderId">Order ID</label>
         <input type="text" id="orderId" placeholder="e.g. ZB-20251209-001" required>
       </div>
+      
       <div class="form-group">
         <label for="paymentProof">Upload Payment Screenshot (required)</label>
-        <input type="file" id="paymentProof" accept="image/*" required>
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-icon">📱</div>
+          <div class="upload-text">Click or drag to upload payment screenshot</div>
+          <div class="file-name" id="fileName"></div>
+          <input type="file" id="paymentProof" class="file-input" accept="image/*" required>
+        </div>
       </div>
-      <button type="submit" class="btn">Confirm Payment</button>
+      
+      <button type="submit" class="btn" id="submitBtn">Confirm Payment</button>
     </form>
 
     <div id="result"></div>
@@ -84,7 +349,16 @@
     // Replace with your actual Google Apps Script Web App URL
     const API_URL = "https://script.google.com/macros/s/AKfycbw1p7dCybg2PVp3XRF1dleQHbAK4oerJau6XPLogxROHa9CZp8LfksRDLNtC8jEOQFd0w/exec";
 
-    // Helper: upload image to imgbb
+    // DOM Elements
+    const form = document.getElementById("confirmForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const processingOverlay = document.getElementById("processingOverlay");
+    const resultDiv = document.getElementById("result");
+    const uploadArea = document.getElementById("uploadArea");
+    const fileInput = document.getElementById("paymentProof");
+    const fileNameDisplay = document.getElementById("fileName");
+
+    // Helper: upload image to imgbb (EXACT SAME AS BEFORE)
     async function uploadToImgBB(file) {
       const formData = new FormData();
       formData.append("image", file);
@@ -101,22 +375,101 @@
       }
     }
 
-    document.getElementById("confirmForm").addEventListener("submit", async (e) => {
+    // Show processing overlay
+    function showProcessing() {
+      processingOverlay.style.display = 'flex';
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
+    }
+
+    // Hide processing overlay
+    function hideProcessing() {
+      processingOverlay.style.display = 'none';
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('loading');
+    }
+
+    // Show result message
+    function showResult(message, isSuccess) {
+      resultDiv.innerHTML = '';
+      
+      if (isSuccess) {
+        resultDiv.className = 'success';
+        resultDiv.innerHTML = `
+          <div class="result-title">✅ Payment Confirmed!</div>
+          <div class="result-message">${message}</div>
+          <div class="result-message">We'll begin processing your order shortly. Check status anytime using your Order ID.</div>
+        `;
+      } else {
+        resultDiv.className = 'error';
+        resultDiv.innerHTML = `
+          <div class="result-title">❌ Payment Confirmation Failed</div>
+          <div class="result-message">${message}</div>
+        `;
+      }
+      
+      resultDiv.style.display = 'block';
+      resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Handle file upload interactions
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragging');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragging');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragging');
+      
+      if (e.dataTransfer.files.length) {
+        const file = e.dataTransfer.files[0];
+        if (file.type.startsWith('image/')) {
+          fileInput.files = e.dataTransfer.files;
+          updateFileName(file.name);
+        } else {
+          alert('Please upload an image file (JPG, PNG, etc.)');
+        }
+      }
+    });
+
+    fileInput.addEventListener('change', function() {
+      if (this.files.length) {
+        updateFileName(this.files[0].name);
+      }
+    });
+
+    function updateFileName(name) {
+      fileNameDisplay.textContent = Selected: ${name};
+      fileNameDisplay.style.display = 'block';
+      uploadArea.style.borderColor = '#4CAF50';
+      uploadArea.style.backgroundColor = '#f8fdf8';
+    }
+
+    // Form submission handler (EXACT SAME LOGIC AS BEFORE)
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const orderId = document.getElementById("orderId").value.trim();
-      const file = document.getElementById("paymentProof").files[0];
+      const file = fileInput.files[0];
 
       if (!orderId || !file) {
         showResult("Please fill all fields.", false);
         return;
       }
 
+      // Show processing state
+      showProcessing();
+
       try {
-        // Upload screenshot
+        // Upload screenshot (EXACT SAME AS BEFORE)
         const imageUrl = await uploadToImgBB(file);
 
-        // Send to Google Apps Script
+        // Send to Google Apps Script (EXACT SAME AS BEFORE)
         const response = await fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -128,27 +481,34 @@
 
         const result = await response.json();
 
-        if (result.success) {
-          showResult(
-            "✅ Payment confirmed! We’ll begin processing your order shortly. Check status anytime using your Order ID.",
-            true
-          );
-          document.getElementById("confirmForm").reset();
-        } else {
-          showResult("❌ " + (result.error || "Order not found. Check your Order ID."), false);
-        }
+        // Hide processing
+        setTimeout(() => {
+          hideProcessing();
+
+          if (result.success) {
+            showResult(
+              "Your payment has been successfully confirmed!",
+              true
+            );
+            form.reset();
+            fileNameDisplay.style.display = 'none';
+            uploadArea.style.borderColor = '#d1d9e6';
+            uploadArea.style.backgroundColor = '#fafcfd';
+          } else {
+            showResult(result.error || "Order not found. Check your Order ID.", false);
+          }
+        }, 1000); // Small delay for better UX
+
       } catch (err) {
         console.error(err);
-        showResult("❌ Failed to upload image or confirm payment. Try again.", false);
+        
+        // Hide processing on error
+        setTimeout(() => {
+          hideProcessing();
+          showResult("Failed to upload image or confirm payment. Please try again.", false);
+        }, 1000);
       }
     });
-
-    function showResult(message, isSuccess) {
-      const resultDiv = document.getElementById("result");
-      resultDiv.textContent = message;
-      resultDiv.className = isSuccess ? "success" : "error";
-      resultDiv.style.display = "block";
-    }
 
     // Auto-fill Order ID from URL if present (e.g., link from WhatsApp)
     const urlParams = new URLSearchParams(window.location.search);
@@ -156,6 +516,24 @@
     if (orderIdFromUrl) {
       document.getElementById("orderId").value = orderIdFromUrl;
     }
+
+    // Add visual feedback for required fields
+    const orderIdInput = document.getElementById("orderId");
+    orderIdInput.addEventListener('input', function() {
+      if (this.value.trim()) {
+        this.style.borderColor = '#4CAF50';
+      } else {
+        this.style.borderColor = '#e8eef4';
+      }
+    });
+
+    // Add enter key support
+    orderIdInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && fileInput.files.length) {
+        e.preventDefault();
+        submitBtn.click();
+      }
+    });
   </script>
 </body>
 </html>
